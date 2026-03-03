@@ -24,8 +24,9 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`account` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
-  `character_limit` INT NULL DEFAULT NULL,
-  `email` VARCHAR(100) NULL DEFAULT NULL,
+  `character_limit` INT NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `salt` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
@@ -46,7 +47,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `choose_your_fate`.`race_details`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `choose_your_fate`.`race_details` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'BOB rules them all!',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character` (
   `scene_id` INT NOT NULL,
   `race_detail_id` INT NOT NULL,
   `name` VARCHAR(50) NOT NULL,
+  `flag` JSON NOT NULL COMMENT 'Lost/gain of rep, debuff/buff, BOB?... etc',
   PRIMARY KEY (`id`),
   INDEX `player_id_idx` (`account_id` ASC) VISIBLE,
   INDEX `chapter_id_idx` (`chapter_id` ASC) VISIBLE,
@@ -174,17 +176,20 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`choice` (
   `scene_id` INT NOT NULL,
   `destination_scene_id` INT NULL DEFAULT NULL,
   `description` MEDIUMTEXT NULL DEFAULT NULL,
+  `consequence` VARCHAR(50) NULL,
+  `target_id` INT NULL COMMENT 'Give quest, give item(s)... etc',
+  `value_int` INT NULL COMMENT 'Stat change, lose hp, fashion!!!... etc\n\n\n\n\nze BOB race!',
+  `story_weight` SMALLINT(255) NOT NULL COMMENT 'Value/weight of the recap or story telling for the AI to use.',
+  `requirements` JSON NULL COMMENT 'Requirements is what gives or takes away choices/ quests because you either meet the requirements or don\'t.',
   PRIMARY KEY (`id`),
   INDEX `scene_id_idx` (`scene_id` ASC) VISIBLE,
   INDEX `fk_choice_destination_scene_idx` (`destination_scene_id` ASC) VISIBLE,
-  CONSTRAINT `fk_choice_scene`
-    FOREIGN KEY (`scene_id`)
-    REFERENCES `choose_your_fate`.`scene` (`id`),
   CONSTRAINT `fk_choice_destination_scene`
     FOREIGN KEY (`destination_scene_id`)
-    REFERENCES `choose_your_fate`.`scene` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `choose_your_fate`.`scene` (`id`),
+  CONSTRAINT `fk_choice_scene`
+    FOREIGN KEY (`scene_id`)
+    REFERENCES `choose_your_fate`.`scene` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -228,11 +233,11 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`equipment` (
   `head` INT NULL DEFAULT NULL,
   `legs` INT NULL DEFAULT NULL,
   `chest` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`character_id`),
   INDEX `fk_equipment_character1_idx` (`character_id` ASC) VISIBLE,
   INDEX `fk_equipment_item_idx` (`head` ASC) VISIBLE,
   INDEX `fk_equipment_chest_idx` (`chest` ASC) VISIBLE,
   INDEX `fk_equipment_legs_idx` (`legs` ASC) VISIBLE,
-  PRIMARY KEY (`character_id`),
   CONSTRAINT `fk_equipment_character`
     FOREIGN KEY (`character_id`)
     REFERENCES `choose_your_fate`.`character` (`id`),
@@ -334,6 +339,29 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`scene_has_npc` (
   CONSTRAINT `fk_scene_has_npc_scene`
     FOREIGN KEY (`scene_id`)
     REFERENCES `choose_your_fate`.`scene` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `choose_your_fate`.`choice_has_item`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `choose_your_fate`.`choice_has_item` (
+  `choice_id` INT NOT NULL,
+  `item_id` INT NOT NULL,
+  PRIMARY KEY (`choice_id`, `item_id`),
+  INDEX `fk_choice_has_item_item1_idx` (`item_id` ASC) VISIBLE,
+  INDEX `fk_choice_has_item_choice1_idx` (`choice_id` ASC) VISIBLE,
+  CONSTRAINT `fk_choice_has_item_choice1`
+    FOREIGN KEY (`choice_id`)
+    REFERENCES `choose_your_fate`.`choice` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_choice_has_item_item1`
+    FOREIGN KEY (`item_id`)
+    REFERENCES `choose_your_fate`.`item` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
