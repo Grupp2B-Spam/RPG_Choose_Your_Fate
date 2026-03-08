@@ -70,9 +70,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `choose_your_fate`.`character`
+-- Table `choose_your_fate`.`character_avatar`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character` (
+CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character_avatar` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `account_id` INT NOT NULL,
   `chapter_id` INT NOT NULL,
@@ -85,16 +85,16 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character` (
   INDEX `chapter_id_idx` (`chapter_id` ASC) VISIBLE,
   INDEX `scene_id_idx` (`scene_id` ASC) VISIBLE,
   INDEX `race_detail_id_idx` (`race_detail_id` ASC) VISIBLE,
-  CONSTRAINT `fk_chapter_character`
+  CONSTRAINT `fk_chapter_character_avatar`
     FOREIGN KEY (`chapter_id`)
     REFERENCES `choose_your_fate`.`chapter` (`id`),
-  CONSTRAINT `fk_player_character`
+  CONSTRAINT `fk_player_character_avatar`
     FOREIGN KEY (`account_id`)
     REFERENCES `choose_your_fate`.`account` (`id`),
-  CONSTRAINT `fk_race_detail_character`
+  CONSTRAINT `fk_race_detail_character_avatar`
     FOREIGN KEY (`race_detail_id`)
     REFERENCES `choose_your_fate`.`race_details` (`id`),
-  CONSTRAINT `fk_scene_character`
+  CONSTRAINT `fk_scene_character_avatar`
     FOREIGN KEY (`scene_id`)
     REFERENCES `choose_your_fate`.`scene` (`id`))
 ENGINE = InnoDB
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character_details` (
   PRIMARY KEY (`character_id`),
   CONSTRAINT `fk_character_details_character`
     FOREIGN KEY (`character_id`)
-    REFERENCES `choose_your_fate`.`character` (`id`))
+    REFERENCES `choose_your_fate`.`character_avatar` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character_has_quest` (
   INDEX `quest_id_idx` (`quest_id` ASC) VISIBLE,
   CONSTRAINT `fk_character_has_quest_character`
     FOREIGN KEY (`character_id`)
-    REFERENCES `choose_your_fate`.`character` (`id`),
+    REFERENCES `choose_your_fate`.`character_avatar` (`id`),
   CONSTRAINT `fk_character_has_quest_quest`
     FOREIGN KEY (`quest_id`)
     REFERENCES `choose_your_fate`.`quest` (`id`))
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`character_path` (
   INDEX `character_id_idx` (`character_id` ASC) VISIBLE,
   CONSTRAINT `fk_character_path_character`
     FOREIGN KEY (`character_id`)
-    REFERENCES `choose_your_fate`.`character` (`id`))
+    REFERENCES `choose_your_fate`.`character_avatar` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`equipment` (
   INDEX `fk_equipment_legs_idx` (`legs` ASC) VISIBLE,
   CONSTRAINT `fk_equipment_character`
     FOREIGN KEY (`character_id`)
-    REFERENCES `choose_your_fate`.`character` (`id`),
+    REFERENCES `choose_your_fate`.`character_avatar` (`id`),
   CONSTRAINT `fk_equipment_chest`
     FOREIGN KEY (`chest`)
     REFERENCES `choose_your_fate`.`item` (`id`),
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`inventory` (
   INDEX `fk_inventory_character1_idx` (`character_id` ASC) VISIBLE,
   CONSTRAINT `fk_inventory_character`
     FOREIGN KEY (`character_id`)
-    REFERENCES `choose_your_fate`.`character` (`id`))
+    REFERENCES `choose_your_fate`.`character_avatar` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -365,6 +365,22 @@ CREATE TABLE IF NOT EXISTS `choose_your_fate`.`choice_has_item` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
+USE `choose_your_fate` ;
+
+-- -----------------------------------------------------
+-- Placeholder table for view `choose_your_fate`.`v_character`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `choose_your_fate`.`v_character` (`id` INT);
+
+-- -----------------------------------------------------
+-- View `choose_your_fate`.`v_character`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `choose_your_fate`.`v_character`;
+USE `choose_your_fate`;
+CREATE  OR REPLACE VIEW `v_character` AS (
+    SELECT avatar.name, deets.intelligence, deets.charisma, deets.fashion, avatar.flag
+    FROM character_details deets, character_avatar avatar
+        );
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
