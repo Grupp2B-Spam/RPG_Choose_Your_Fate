@@ -1,5 +1,6 @@
 package dk.ek.gruppe2.chooseyourfate.model.mysql;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Account {
     private String salt;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     private List<CharacterAvatar> characters = new ArrayList<>();
 
     public Account() {}

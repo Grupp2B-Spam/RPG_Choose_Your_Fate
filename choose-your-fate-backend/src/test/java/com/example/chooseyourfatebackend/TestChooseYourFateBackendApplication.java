@@ -1,5 +1,6 @@
 package com.example.chooseyourfatebackend;
 
+import dk.ek.gruppe2.chooseyourfate.ChooseYourFateBackendApplication;
 import org.springframework.boot.SpringApplication;
 
 public class TestChooseYourFateBackendApplication {

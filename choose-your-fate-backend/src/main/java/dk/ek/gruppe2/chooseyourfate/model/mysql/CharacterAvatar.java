@@ -2,6 +2,9 @@ package dk.ek.gruppe2.chooseyourfate.model.mysql;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "character_avatar")
 public class CharacterAvatar {
@@ -26,6 +29,9 @@ public class CharacterAvatar {
     @JoinColumn(name = "race_detail_id", nullable = false)
     private RaceDetails raceDetails;
 
+    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CharacterHasQuest> characterQuests = new ArrayList<>();
+
     @Column(nullable = false, length = 50)
     private String name;
 
@@ -36,6 +42,11 @@ public class CharacterAvatar {
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    public void addQuest(Quest quest, Byte status) {
+        CharacterHasQuest relation = new CharacterHasQuest(this, quest, status);
+        characterQuests.add(relation);
+    }
 
     public Account getAccount() { return account; }
     public void setAccount(Account account) { this.account = account; }
