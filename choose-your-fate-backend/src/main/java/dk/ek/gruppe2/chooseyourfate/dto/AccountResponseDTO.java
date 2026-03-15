@@ -1,5 +1,7 @@
 package dk.ek.gruppe2.chooseyourfate.dto;
 
+import dk.ek.gruppe2.chooseyourfate.model.mysql.Account;
+
 public class AccountResponseDTO {
 
     private Integer id;
@@ -15,6 +17,22 @@ public class AccountResponseDTO {
         this.username = username;
         this.characterLimit = characterLimit;
         this.email = email;
+    }
+
+    public AccountResponseDTO(Account account) {
+        this.id = account.getId();
+        this.username = account.getUsername();
+        this.characterLimit = account.getCharacterLimit();
+        this.email = account.getEmail();
+    }
+
+    public AccountResponseDTO toDTO(Account account) {
+        return new AccountResponseDTO(
+                account.getId(),
+                account.getUsername(),
+                account.getCharacterLimit(),
+                account.getEmail()
+        );
     }
 
     public Integer getId() {
