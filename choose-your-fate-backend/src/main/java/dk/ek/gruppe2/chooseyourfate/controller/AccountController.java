@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mysql/accounts")
+@RequestMapping("/api/accounts")
 public class AccountController {
 
     private final AccountService accountService;
