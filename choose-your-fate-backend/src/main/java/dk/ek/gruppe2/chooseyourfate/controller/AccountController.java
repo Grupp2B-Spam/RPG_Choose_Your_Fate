@@ -2,7 +2,7 @@ package dk.ek.gruppe2.chooseyourfate.controller;
 
 import dk.ek.gruppe2.chooseyourfate.dto.AccountResponseDTO;
 import dk.ek.gruppe2.chooseyourfate.dto.CreateAccountRequestDTO;
-import dk.ek.gruppe2.chooseyourfate.service.mysql.AccountService;
+import dk.ek.gruppe2.chooseyourfate.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,11 +1,10 @@
-package dk.ek.gruppe2.chooseyourfate.service.mysql;
+package dk.ek.gruppe2.chooseyourfate.service;
 
 import dk.ek.gruppe2.chooseyourfate.dto.AccountResponseDTO;
 import dk.ek.gruppe2.chooseyourfate.dto.CreateAccountRequestDTO;
 import dk.ek.gruppe2.chooseyourfate.exception.DuplicateResourceException;
 import dk.ek.gruppe2.chooseyourfate.model.mysql.Account;
 import dk.ek.gruppe2.chooseyourfate.repository.mysql.AccountRepository;
-import dk.ek.gruppe2.chooseyourfate.service.CrudService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
