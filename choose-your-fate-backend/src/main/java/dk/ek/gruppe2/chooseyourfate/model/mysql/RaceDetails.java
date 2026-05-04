@@ -1,0 +1,31 @@
+package dk.ek.gruppe2.chooseyourfate.model.mysql;
+
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "race_details")
+public class RaceDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @OneToMany(mappedBy = "raceDetails")
+    private List<CharacterAvatar> characters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "raceDetails")
+    private List<Npc> npcs = new ArrayList<>();
+
+    public RaceDetails() {}
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public List<CharacterAvatar> getCharacters() { return characters; }
+    public void setCharacters(List<CharacterAvatar> characters) { this.characters = characters; }
+
+    public List<Npc> getNpcs() { return npcs; }
+    public void setNpcs(List<Npc> npcs) { this.npcs = npcs; }
+}
